@@ -126,6 +126,10 @@ int main(int argc, char **argv)
             Cbc_addRow(mip, rname, nz, idx, coef, 'G', -n );
         }
     }
+    
+    printf("v1: %d\n", Cbc_getNumCols(mip)); fflush(stdout);
+    printf("v2: %d\n", Cbc_getNumRows(mip)); fflush(stdout);
+    printf("v3: %d\n", Cbc_getNumIntegers(mip)); fflush(stdout);
 
     //printf("model has %d variables, %d of which are integral and %d rows", 
             //Cbc_getNumCols(mip), Cbc_getNumIntegers(mip), Cbc_getNumRows(mip));

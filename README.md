@@ -3,7 +3,7 @@ COIN-OR Branch&amp;Cut Cbc examples using the C API
 
 ## Usage
 
-After installing the (COIN-OR CBC MIP Solver)[https://github.com/coin-or/Cbc], to build  just run:
+After installing the [COIN-OR CBC MIP Solver](https://github.com/coin-or/Cbc), to build  just run:
 
 ```console
 $ make
