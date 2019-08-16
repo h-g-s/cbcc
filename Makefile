@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-O0 -g -Wall -fsanitize=address `pkg-config --cflags cbc`
-LDFLAGS=-O0 -g -Wall -fsanitize=address `pkg-config --libs cbc`
+CFLAGS=-O0 -g -Wall `pkg-config --cflags cbc`
+LDFLAGS=-O0 -g -Wall `pkg-config --libs cbc`
 
 all:tsp-compact
 
@@ -15,4 +15,3 @@ tsp-instance.o:tsp-instance.c tsp-instance.h
 
 clean:
 	rm *.o tsp-compact
-

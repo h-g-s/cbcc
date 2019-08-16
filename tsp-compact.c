@@ -130,7 +130,7 @@ int main(int argc, char **argv)
     //printf("model has %d variables, %d of which are integral and %d rows", 
             //Cbc_getNumCols(mip), Cbc_getNumIntegers(mip), Cbc_getNumRows(mip));
 
-    Cbc_setMaximumSeconds(mip, 20);
+    Cbc_setMaximumSeconds(mip, 120);
     Cbc_writeLp(mip, "tsp");
     Cbc_solve(mip);
 
@@ -138,6 +138,8 @@ int main(int argc, char **argv)
             Cbc_getObjValue(mip), Cbc_getBestPossibleObjValue(mip));
 
 
+    free(x[0]);
+    free(x);
     free(idx);
     free(coef);
 
