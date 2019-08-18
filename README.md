@@ -20,3 +20,26 @@ Example of usage:
 $ ./tsp-compact data/ulysses22.tsp
 ```
 
+## queens
+
+Solves the n-queens problem using a binary programming formulation.
+
+Example of usage:
+
+```console
+$ ./queens 10
+```
+
+## queens-lazy
+
+Solves the n-queens problem using a binary programming formulation. Constraints
+to forbid conflicts in the two diagonals are added as lazy conntraints in the 
+cut generator callback.
+
+Example of usage:
+
+```console
+$ ./queens-lazy 10
+```
+
+

@@ -56,8 +56,8 @@ int main( int argc, char **argv )
 
     n = atoi(argv[1]);
 
-    x = malloc( sizeof(int*)*n );
-    x[0] = malloc( sizeof(int)*n*n );
+    x = (int **) malloc( sizeof(int*)*n );
+    x[0] = (int *) malloc( sizeof(int)*n*n );
     for ( i=1 ; (i<n) ; ++i )
         x[i] = x[i-1] + n;
 
@@ -77,8 +77,8 @@ int main( int argc, char **argv )
     }
 
     // area to store constraint contents
-    idx = malloc(sizeof(int)*n);
-    coef = malloc(sizeof(double)*n);
+    idx = (int*) malloc(sizeof(int)*n);
+    coef = (double *) malloc(sizeof(double)*n);
 
     /* constraint one per row */
     for ( i=0 ; (i<n) ; ++i )
