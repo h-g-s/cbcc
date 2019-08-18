@@ -110,7 +110,7 @@ int main( int argc, char **argv )
 
     Cbc_setMaximumSeconds(model, 100);
     // to keep original variable indexes valid
-    Cbc_setParameter(model, "preproc", "off");
+    Cbc_setParameter(model, "preprocess", "off");
     Cbc_setParameter(model, "heur", "off");
     Cbc_solve(model);
     xs = Cbc_getColSolution(model);
