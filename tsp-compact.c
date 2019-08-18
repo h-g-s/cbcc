@@ -1,3 +1,27 @@
+/********************************************************************************
+ * Copyright (c) 2019 Haroldo Gambini Santos
+ * 
+ * tsp-compact
+ * Example of using the C-API of the COIN-OR CBC MIP solver to solve the 
+ * traveling salesmam problem using a simple, compact formulation.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ ********************************************************************************/
+
+/**
+ * @file tsp-compact.c
+ * @author Haroldo Gambini Santos
+ * @date 15 Aug 2019
+ *
+ * Solves the traveling salesman problem using a compact MIP formulation. 
+ * Communication with the COIN-OR CBC MIP solver is done with its C API.
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
