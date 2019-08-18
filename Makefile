@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-O0 -g -Wall `pkg-config --cflags cbc`
 LDFLAGS=-O0 -g -Wall `pkg-config --libs cbc`
 
-all:tsp-compact queens
+all:tsp-compact queens queens-lazy
 
 tsp-compact:tsp-compact.o tsp-instance.o
 	$(CC) $(CFLAGS) tsp-compact.o tsp-instance.o -o tsp-compact $(LDFLAGS) -lm
@@ -19,6 +19,12 @@ queens:queens.o
 
 queens.o:queens.c
 	$(CC) $(CFLAGS) -c queens.c -o queens.o
+
+queens-lazy:queens-lazy.o
+	$(CC) $(CFLAGS) queens-lazy.o -o queens-lazy $(LDFLAGS) -lm
+
+queens-lazy.o:queens-lazy.c
+	$(CC) $(CFLAGS) -c queens-lazy.c -o queens-lazy.o
 
 clean:
 	rm *.o tsp-compact
