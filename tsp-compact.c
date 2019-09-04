@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     //printf("model has %d variables, %d of which are integral and %d rows", 
             //Cbc_getNumCols(mip), Cbc_getNumIntegers(mip), Cbc_getNumRows(mip));
 
-    Cbc_setMaximumSeconds(mip, 120);
+    Cbc_setMaximumSeconds(mip, 30);
     Cbc_writeLp(mip, "tsp");
     Cbc_solve(mip);
 
