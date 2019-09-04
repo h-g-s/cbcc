@@ -29,6 +29,11 @@
 #include <string.h>
 #include "Cbc_C_Interface.h"
 
+#define MAX( a, b ) ( (a)>(b) ? (a) : (b) )
+#define MIN( a, b ) ( (a)<(b) ? (a) : (b) )
+
+static void cut_callback( void *osiSolver, void *osiCuts, void *appData );
+
 // resources
 const int r = 2;
 
@@ -198,6 +203,7 @@ int main( int argc, const char **argv )
         Cbc_addRow( mip, rowName, nz, idx, coef, 'G', p[j1] );
     }
 
+    Cbc_addCutCallback(mip, cut_callback, "Precedence cuts", NULL, 1, 0);
     Cbc_solve( mip );
 
     char hasSol = 0;
@@ -294,3 +300,93 @@ char getjt( const char *varName, int *j, int *t )
 
     return 1;
 }
+
+
+static void cut_callback( void *osiSolver, void *osiCuts, void *appData ) {
+    int maxT = 0, maxJ;
+    int j, t;
+
+    // checking time horizon and jobs
+    for ( int i=0 ; (i<Osi_getNumCols(osiSolver)) ; ++i ) {
+        char varName[256];
+        Osi_getColName( osiSolver, i, varName, 256 );
+        if (getjt( varName, &j, &t )) {
+            maxT = MAX( maxT, t);
+            maxJ = MAX( maxJ, j);
+        }
+    }
+
+    // filling matrix with var indexes
+    int **x = NEW_VECTOR( int *, (maxJ+1) );
+    x[0] = NEW_VECTOR( int , (maxJ+1)*(maxT+1) );
+    for ( int j=1 ; j<=maxJ ; ++j )
+        x[j] = x[j-1] + (maxT+1);
+
+    for ( int j=0 ; (j<=maxJ) ; ++j )
+        for ( int t=0 ; (t<=maxT) ; ++t ) 
+            x[j][t] = -1;
+
+    for ( int i=0 ; (i<Osi_getNumCols(osiSolver)) ; ++i ) {
+        char varName[256];
+        Osi_getColName( osiSolver, i, varName, 256 );
+        if (getjt( varName, &j, &t )) 
+            x[j][t] = i;
+    }
+
+    int *idx = NEW_VECTOR( int, Osi_getNumCols(osiSolver) );
+    double *coef = NEW_VECTOR( double, Osi_getNumCols(osiSolver) );
+
+    const double *sol = Osi_getColSolution( osiSolver );
+
+
+    int nCuts = 0;
+
+    // checking cuts
+    for ( int t=0 ; (t<=maxT) ; ++t ) 
+    {
+        for ( int i=0 ; (i<nPrec) ; ++i ) 
+        {
+            double lhs = 0.0;
+            j = P[i][0];
+            int s = P[i][1];
+
+            // adding j vars
+            int nz = 0;
+            for ( int tl = 0 ; tl<=t ; ++tl ) {
+                if (x[j][tl] == -1)
+                    continue;
+                idx[nz] = x[j][tl];
+                coef[nz] = 1.0;
+                lhs += sol[x[j][tl]];
+                ++nz;
+            }
+            if (!nz)
+                continue;
+            for ( int tl = 0 ; tl<=MIN(maxT, t+p[j]) ; ++tl ) {
+                if (x[s][tl] == -1)
+                    continue;
+                idx[nz] = x[s][tl];
+                coef[nz] = -1.0;
+                lhs -= sol[x[s][tl]];
+                ++nz;
+            }
+
+            if (lhs > -1e-4)
+                continue;
+
+            OsiCuts_addRowCut( osiCuts, nz, idx, coef, 'G', 0.0 );
+            ++nCuts;
+
+            if (nCuts>5)
+                break;
+        }
+        if (nCuts>5)
+            break;
+    }
+
+    free( x[0] );
+    free( x );
+    free( idx );
+    free( coef );
+}
+

@@ -3,7 +3,7 @@ CXX=g++
 CFLAGS=-O0 -g -Wall `pkg-config --cflags cbc` -fsanitize=address
 LDFLAGS=-O0 -g -Wall `pkg-config --libs cbc` -fsanitize=address -lm
 
-all:tsp-compact queens queens-lazy tsp-cuts rcpsp
+all:tsp-compact queens queens-lazy tsp-cuts rcpsp rcpsp-cuts
 
 tsp-compact:tsp-compact.o tsp-instance.o
 	$(CXX) $(CFLAGS) tsp-compact.o tsp-instance.o -o tsp-compact $(LDFLAGS) -lm
@@ -41,8 +41,14 @@ queens-lazy.o:queens-lazy.c
 rcpsp:rcpsp.o
 	$(CXX) $(CFLAGS) rcpsp.o -o rcpsp $(LDFLAGS) -lm
 
+rcpsp-cuts:rcpsp-cuts.o
+	$(CXX) $(CFLAGS) rcpsp-cuts.o -o rcpsp-cuts $(LDFLAGS) -lm
+
 rcpsp.o:rcpsp.c
 	$(CC) $(CFLAGS) -c rcpsp.c -o rcpsp.o
+
+rcpsp-cuts.o:rcpsp-cuts.c
+	$(CC) $(CFLAGS) -c rcpsp-cuts.c -o rcpsp-cuts.o
 
 clean:
 	rm -f *.o tsp-compact queens queens-lazy
